@@ -1,0 +1,144 @@
+html{
+    background-color:#0A0908;
+    font-family:Helvetica;
+}
+
+body{
+    width:76vw;
+    margin:auto;
+    min-height:100vh;
+    background-color:#5E503F;
+    overflow:hidden;
+}
+
+.index-form{
+    width:60%;
+    margin:auto;
+}
+
+.index-form .option{
+    display:inline-block;
+    width:22vw;
+    height:22vw;
+    box-sizing:border-box;
+    padding:15px;
+    text-align:center;
+}
+
+.index-form .option input {
+    display:inline-block;
+    width:90%;
+    height:90%;
+    background:#22333B;
+    border:0;
+    color:transparent;
+    border-radius:50%;
+    cursor:pointer;
+    outline:0;
+}
+
+.index-form .option input[value="create"]{
+    background-image:url('../icons/add.svg');
+}
+
+.index-form .option input[value="read"]{
+    background-image:url('../icons/read.svg');
+}
+
+.index-form .option input[value="update"]{
+    background-image:url('../icons/update.svg');
+}
+
+.index-form .option input[value="delete"]{
+    background-image:url('../icons/delete.svg');
+}
+
+section{
+    padding:20px;
+    position:relative;
+}
+
+section form{
+    margin: 0 auto;
+    display: inline-block;
+    line-height: 1.5em;
+    padding: 15px;
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
+article{
+    display:inline-block;
+    width:calc((100% / 4) - (3px * 4));
+    border:1px solid #F2F4F3;
+    vertical-align:top;
+    cursor:pointer;
+    margin:3px;
+    border-radius: 15px;
+    overflow:hidden;
+    background-color:#5E503F;
+}
+article.shown.shown.shown{
+    max-height:auto;
+    /*position:absolute;*/
+    box-shadow: 5px 5px 3px #0A0908;
+}
+
+article:not(.shown){
+    max-height:1.3em;
+}
+
+article span{
+    margin:10px 15px;
+    pointer-events:none;
+    display:block;
+    color:#F2F4F3;
+}
+
+article span:first-child{
+    color:#0A0908;
+    background-color:#F2F4F3;
+    margin:0;
+    border-top:2px solid #F2F4F3;
+    border-bottom:2px solid #F2F4F3;
+    border-left:15px solid #F2F4F3;
+    border-right:15px solid #F2F4F3;
+}
+
+.sidebutton{
+    display:block;
+    width:100px;
+    height:100px;
+    border-radius: 50%;
+    border:0;
+    cursor:pointer;
+    outline:0;
+    position:fixed;
+    background-color:#F2F4F3;
+    text-align:center;
+    font-size:1.3em;
+    color:#22333B;
+}
+
+a.sidebutton{
+    text-decoration: none;
+}
+
+#showAll{
+    top:25px;
+    left:25px;
+}
+
+.volver{
+    top:25px;
+    right:25px;
+    line-height:100px;
+}
+/*
+colores:
+negro = #0A0908
+azul = #22333B
+blanco = #F2F4F3
+marron claro = #A9927D
+marron oscuro = #5E503F
+*/
