@@ -22,9 +22,10 @@
 	    <h1>Introduce valores para la modificación</h1>
 	    <form action="Concluir" method="post">
 		<label>Anilla</label><span><%=ave.getAnilla()%></span><br>
-		<label>Especie</label><input type="text" name="especie" <%if(request.getAttribute("error_especie") == null){%>placeholder="<%=ave.getEspecie()%>"<%}else if(request.getAttribute("error_especie") != null){%>error<%}%>><br>
-		<label>Lugar</label><input type="text" name="lugar" <%if(request.getAttribute("error_lugar") == null){%>placeholder="<%=ave.getLugar()%>"<%}else if(request.getAttribute("error_lugar") != null){%>error<%}%>><br>
-		<label>Fecha</label><input type="text" name="fecha" <%if(request.getAttribute("error_fecha") == null){%>placeholder="<%=ave.getFecha()%>"<%}else if(request.getAttribute("error_fecha") != null){%>error placeholder="AAAA-DD-MM"<%}%>><br>
+		<input type="hidden" name="anilla" value="<%=ave.getAnilla()%>">
+		<label>Especie</label><input type="text" name="especie" <%if(request.getAttribute("error_especie") == null){%>value="<%=ave.getEspecie()%>"<%}else if(request.getAttribute("error_especie") != null){%>error<%}%>><br>
+		<label>Lugar</label><input type="text" name="lugar" <%if(request.getAttribute("error_lugar") == null){%>value="<%=ave.getLugar()%>"<%}else if(request.getAttribute("error_lugar") != null){%>error<%}%>><br>
+		<label>Fecha</label><input type="text" name="fecha" <%if(request.getAttribute("error_fecha") == null){%>value="<%=ave.getFecha()%>"<%}else if(request.getAttribute("error_fecha") != null){%>error placeholder="AAAA-DD-MM"<%}%>><br>
 		<input class="boton" type="submit" name="operacion" value="update">
 		<input class="sidebutton volver" type="submit" name="operacion" value="cancel">
 	    </form>

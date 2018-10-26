@@ -35,6 +35,7 @@ public class Operacion extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
 	processRequest(request, response);
+	System.out.println("Operacion");
 	String direccion = "JSP/";
 	if(request.getParameter("operacion") != null){
 	    switch(request.getParameter("operacion")){

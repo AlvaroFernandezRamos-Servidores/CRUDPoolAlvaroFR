@@ -146,6 +146,17 @@ public class Realizar extends HttpServlet {
     }
     
     protected void fetch_update(HttpServletRequest request,HttpServletResponse response, Connection con){
+	//Comprobamos que venga al menos una selección en los parámetros
+	System.out.println(request.getParameterValues("aves_update") == null);
+	if(request.getParameterValues("aves_update") == null || request.getParameterValues("aves_update").length<1){
+	    try {
+		request.getRequestDispatcher("Operacion").forward(request,response);
+	    } catch (ServletException ex) {
+		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    } catch (IOException ex) {
+		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
 	Ave ave = new Ave();
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
