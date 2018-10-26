@@ -14,8 +14,15 @@
     </head>
     <body>
 	<section>
-        <h1>EXITO</h1>
-	<a class="sidebutton volver" href="<%=request.getContextPath()%>/index.html">Volver</a>
+	    <h1>La inserción se realizó con éxito</h1>
+	    <ave>
+		<h2>El ave insertada es:</h2>
+		<span>Anilla:</span><span><%=request.getParameter("anilla")%></span><br>
+		<span>Especie:</span><span><%=request.getParameter("especie")%></span><br>
+		<span>Lugar:</span><span><%=request.getParameter("lugar")%></span><br>
+		<span>Fecha:</span><span><%=request.getParameter("fecha")%></span><br>
+	    </ave>
+	    <a class="sidebutton volver" href="Retornar">Volver</a>
 	</section>
     </body>
 </html>

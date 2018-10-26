@@ -42,12 +42,13 @@ public class Concluir extends HttpServlet {
 //	} catch (NamingException ex) {
 //	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
 //	}
-//	if(request.getParameter("operacion") != null){
-//	    switch(request.getParameter("operacion")){
-//		case "update":break;
-//		case "delete":break;
-//	    }
-//	}
+	if(request.getParameter("operacion") != null){
+	    switch(request.getParameter("operacion")){
+		case "update":break;
+		case "delete":break;
+		case "cancel":request.getRequestDispatcher("Retornar").forward(request,response);break;
+	    }
+	}
 	
     }
     

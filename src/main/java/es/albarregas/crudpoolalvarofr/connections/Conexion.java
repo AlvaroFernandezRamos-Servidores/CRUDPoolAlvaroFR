@@ -11,17 +11,12 @@ import javax.sql.DataSource;
 public class Conexion {
     static DataSource datasource;
     
-    public static Connection conectar() throws ClassNotFoundException, NamingException{
+    public static DataSource conectar() throws ClassNotFoundException, NamingException{
 	Connection con = null;
-	try {
-	    Context  initialContext  =  new  InitialContext();
-	    datasource  =(DataSource)initialContext.lookup("java:comp/env/jdbc/CRUDjndi");
-	    Class.forName("com.mysql.jdbc.Driver");
-	    con = datasource.getConnection();
-	}catch (SQLException e){
-	System.err.println(e);
-	}
-	return con;
+	Context  initialContext  =  new  InitialContext();
+	datasource  =(DataSource)initialContext.lookup("java:comp/env/jdbc/CRUDjndi");
+	Class.forName("com.mysql.jdbc.Driver");
+	return datasource;
     }
     
     public static void CloseConnection(Connection con) throws SQLException{
