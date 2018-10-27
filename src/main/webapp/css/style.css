@@ -1,5 +1,5 @@
 html{
-    background-color:#BBBDF6;
+    background-color:#72727E;
     color:#0A0908;
     font-family:Helvetica;
 }
@@ -8,7 +8,7 @@ body{
     width:76vw;
     margin:auto;
     min-height:100vh;
-    background-color:#72727E;
+    background-color:#BBBDF6;
     overflow:hidden;
 }
 
@@ -153,6 +153,7 @@ ave{
     display: inline-block;
     padding: 20px;
     border-radius: 15px;
+    margin-bottom:5px;
 }
 
 ave h2{
@@ -194,6 +195,28 @@ input[type="text"][name]{
     border-radius:5px;
     border:0;
     margin:5px;
+}
+
+input.delete-button{
+    background-color: #F2F4F3;
+    border: 0;
+    padding: 15px;
+    border-radius: 10px;
+    right: 0;
+    display: inline-block;
+    margin: 0 20px;
+    cursor:pointer;
+}
+
+form[action="Retornar"]{
+    display:block;
+    width:0;
+    height:0;
+    border:0;
+}
+
+form.botonera-derecha{
+    text-align:right;
 }
 /*ERRORES*/
 

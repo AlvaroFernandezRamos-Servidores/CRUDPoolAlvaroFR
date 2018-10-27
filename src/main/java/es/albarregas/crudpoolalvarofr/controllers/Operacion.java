@@ -35,21 +35,20 @@ public class Operacion extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
 	processRequest(request, response);
-	System.out.println("Operacion");
 	String direccion = "JSP/";
 	if(request.getParameter("operacion") != null){
 	    switch(request.getParameter("operacion")){
 		case "create":direccion += "create/inicioCreate.jsp";break;
 		case "read":direccion = "Realizar";break;
-		case "update":operacion_update(request,response);direccion += "update/inicioUpdate.jsp";break;
-		case "delete":direccion += "";break;
+		case "update":operacion_get_aves(request,response);direccion += "update/inicioUpdate.jsp";break;
+		case "delete":operacion_get_aves(request,response);direccion += "delete/inicioDelete.jsp";break;
 	    }
 	    
 	    request.getRequestDispatcher(direccion).forward(request, response);
 	}
     }
     
-    public void operacion_update(HttpServletRequest request,HttpServletResponse response){
+    public void operacion_get_aves(HttpServletRequest request,HttpServletResponse response){
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	ArrayList<Ave> aves = new ArrayList();
@@ -67,7 +66,6 @@ public class Operacion extends HttpServlet {
 		aves.add(ave);
 	    }
 	    request.setAttribute("aves",aves);
-	    System.out.println( request.getAttribute("aves"));
 	    Conexion.CloseConnection(con);
 	} catch (SQLException ex) {
 	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);

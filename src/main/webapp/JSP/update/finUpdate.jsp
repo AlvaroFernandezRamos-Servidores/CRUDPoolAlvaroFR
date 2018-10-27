@@ -26,21 +26,26 @@
     </head>
     <body>
 	<section>
-	    <h1>La actualización se realizó con éxito</h1>
-	    <ave>
-		<h2>Los valores anteriores eran:</h2>
-		<span>Anilla:</span><span><%=ave.getAnilla()%></span><br>
-		<span>Especie:</span><span><%=ave.getEspecie()%></span><br>
-		<span>Lugar:</span><span><%=ave.getLugar()%></span><br>
-		<span>Fecha:</span><span><%=ave.getFecha()%></span><br>
-	    </ave>
-	    <ave>
-		<h2>Los nuevos valores son:</h2>
-		<span>Anilla:</span><span><%=nuevaAve.getAnilla()%></span><br>
-		<span>Especie:</span><span><%=nuevaAve.getEspecie()%></span><br>
-		<span>Lugar:</span><span><%=nuevaAve.getLugar()%></span><br>
-		<span>Fecha:</span><span><%=nuevaAve.getFecha()%></span><br>
-	    </ave>
+	    <%if(request.getAttribute("error_sin_cambios")!=null){%>
+		<h1>La actualización no se realizó</h1>
+		<p>Los datos introducidos coinciden con los que se encuentran ya en Base de Datos, y, por lo tanto, se estimó redundante su actualización.</p>
+	    <%}else{%>
+		<h1>La actualización se realizó con éxito</h1>
+		<ave>
+		    <h2>Los valores anteriores eran:</h2>
+		    <span>Anilla:</span><span><%=ave.getAnilla()%></span><br>
+		    <span>Especie:</span><span><%=ave.getEspecie()%></span><br>
+		    <span>Lugar:</span><span><%=ave.getLugar()%></span><br>
+		    <span>Fecha:</span><span><%=ave.getFecha()%></span><br>
+		</ave>
+		<ave>
+		    <h2>Los nuevos valores son:</h2>
+		    <span>Anilla:</span><span><%=nuevaAve.getAnilla()%></span><br>
+		    <span>Especie:</span><span><%=nuevaAve.getEspecie()%></span><br>
+		    <span>Lugar:</span><span><%=nuevaAve.getLugar()%></span><br>
+		    <span>Fecha:</span><span><%=nuevaAve.getFecha()%></span><br>
+		</ave>
+	    <%}%>
 	    <a class="sidebutton volver" href="Retornar">Volver</a>
 	</section>
     </body>

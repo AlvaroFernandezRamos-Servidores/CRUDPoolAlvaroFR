@@ -46,7 +46,8 @@ public class Realizar extends HttpServlet {
 		switch(request.getParameter("operacion")){
 		    case "create":realizar_create(request,response,con);break;
 		    case "read":realizar_read(request,response,con);break;
-		    case "update":fetch_update(request,response,con);break;
+		    case "update":fetch_elements(request,response,con);request.getRequestDispatcher("/JSP/update/update.jsp").forward(request,response);break;
+		    case "delete":fetch_elements(request,response,con);request.getRequestDispatcher("/JSP/delete/delete.jsp").forward(request,response);break;
 		    case "cancel":request.getRequestDispatcher("Retornar").forward(request,response);break;
 		}
 	    }
@@ -89,6 +90,17 @@ public class Realizar extends HttpServlet {
 	Ave ave = new Ave();
 	boolean errores = false;
 	try {
+	    //Si no existen todos los parametros necesarios, reconducimos al controller
+	    if((request.getParameter("anilla") == null) ||
+		request.getParameter("anilla").length() < 1 ||    
+		request.getParameter("especie") == null || 
+		request.getParameter("especie").length() < 1 ||   
+		request.getParameter("lugar") == null || 
+		request.getParameter("lugar").length() < 1 ||   
+		request.getParameter("fecha") == null ||
+		request.getParameter("fecha").length() < 1){
+		request.getRequestDispatcher("Operacion").forward(request,response);
+	    }
 	    //Poblamos el objeto ave
 	    BeanUtils.populate(ave,request.getParameterMap());
 	    //Comprobamos los errores campo a campo
@@ -107,6 +119,10 @@ public class Realizar extends HttpServlet {
 	} catch (IllegalAccessException ex) {
 	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
 	} catch (InvocationTargetException ex) {
+	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	} catch (ServletException ex) {
+	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	} catch (IOException ex) {
 	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
 	}
 	PreparedStatement sql = null;
@@ -145,9 +161,8 @@ public class Realizar extends HttpServlet {
 	}
     }
     
-    protected void fetch_update(HttpServletRequest request,HttpServletResponse response, Connection con){
+    protected void fetch_elements(HttpServletRequest request,HttpServletResponse response, Connection con){
 	//Comprobamos que venga al menos una selección en los parámetros
-	System.out.println(request.getParameterValues("aves_update") == null);
 	if(request.getParameterValues("aves_update") == null || request.getParameterValues("aves_update").length<1){
 	    try {
 		request.getRequestDispatcher("Operacion").forward(request,response);
@@ -161,23 +176,51 @@ public class Realizar extends HttpServlet {
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	try {
-	    sql = con.prepareStatement("SELECT * FROM aves WHERE anilla = ?;");
-	    sql.setString(1,request.getParameterValues("aves_update")[0]);
+	    if(request.getParameter("operacion").equals("delete")){
+		String sentencia = "SELECT * FROM aves WHERE ";
+		for(int i = 0; i < request.getParameterValues("aves_update").length;i++){//aves_delete ??
+		    sentencia += " anilla = ? OR";
+		}
+		sentencia = sentencia.substring(0, sentencia.length() - 3);
+		sentencia+=";";
+		sql = con.prepareStatement(sentencia);
+		for(int i = 0; i < request.getParameterValues("aves_update").length;i++){
+		    sql.setString(i+1,request.getParameterValues("aves_update")[i]);
+		}
+	    }else{
+		sql = con.prepareStatement("SELECT * FROM aves WHERE anilla = ?;");
+		sql.setString(1,request.getParameterValues("aves_update")[0]);
+	    }
 	    resultado = sql.executeQuery();
-	    if(resultado.next()){
-		ave.setAnilla(resultado.getString("anilla"));
-		ave.setEspecie(resultado.getString("especie"));
-		ave.setLugar(resultado.getString("lugar"));
-		ave.setFecha(resultado.getString("fecha"));
-		request.setAttribute("ave",ave);
+	    if(request.getParameter("operacion").equals("delete")){
+		//Vamos a emplear la query del select y a transformarla para
+		//ahorrarnos todo el rollo de generarla.
+		String sql_para_delete = sql.toString().split(":")[1];
+		sql_para_delete = sql_para_delete.replace("SELECT *","DELETE");
+		//lo pasamos por atributo por si el usuario confirma la operación
+		request.setAttribute("delete_query",sql_para_delete);
+		
+		ArrayList<Ave> aves = new ArrayList();
+		while(resultado.next()){
+		    ave = new Ave();
+		    ave.setAnilla(resultado.getString("anilla"));
+		    ave.setEspecie(resultado.getString("especie"));
+		    ave.setLugar(resultado.getString("lugar"));
+		    ave.setFecha(resultado.getString("fecha"));
+		    aves.add(ave);
+		}
+		request.setAttribute("aves_delete",aves);
+	    }else{
+		if(resultado.next()){
+		    ave.setAnilla(resultado.getString("anilla"));
+		    ave.setEspecie(resultado.getString("especie"));
+		    ave.setLugar(resultado.getString("lugar"));
+		    ave.setFecha(resultado.getString("fecha"));
+		    request.setAttribute("ave",ave);
+		}
 	    }
 	    Conexion.CloseConnection(con);
-	    request.getRequestDispatcher("/JSP/update/update.jsp").forward(request,response);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
-	} catch (ServletException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
-	} catch (IOException ex) {
 	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
 	}
     }
