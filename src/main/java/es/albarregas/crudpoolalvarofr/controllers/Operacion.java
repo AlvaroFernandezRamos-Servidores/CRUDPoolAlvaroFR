@@ -2,15 +2,13 @@ package es.albarregas.crudpoolalvarofr.controllers;
 
 import es.albarregas.crudpoolalvarofr.beans.Ave;
 import es.albarregas.crudpoolalvarofr.connections.Conexion;
+import es.albarregas.crudpoolalvarofr.utils.MyLogger;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -68,11 +66,7 @@ public class Operacion extends HttpServlet {
 	    request.setAttribute("aves",aves);
 	    Conexion.CloseConnection(con);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
-	} catch (ClassNotFoundException ex) {
-	    Logger.getLogger(Operacion.class.getName()).log(Level.SEVERE, null, ex);
-	} catch (NamingException ex) {
-	    Logger.getLogger(Operacion.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	}
     }
     

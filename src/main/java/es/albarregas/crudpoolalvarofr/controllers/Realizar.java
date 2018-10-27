@@ -2,6 +2,7 @@ package es.albarregas.crudpoolalvarofr.controllers;
 
 import es.albarregas.crudpoolalvarofr.beans.Ave;
 import es.albarregas.crudpoolalvarofr.connections.Conexion;
+import es.albarregas.crudpoolalvarofr.utils.MyLogger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -9,9 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -51,15 +49,11 @@ public class Realizar extends HttpServlet {
 		    case "cancel":request.getRequestDispatcher("Retornar").forward(request,response);break;
 		}
 	    }
-	} catch (ClassNotFoundException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
-	} catch (NamingException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	}
     }
-    protected void realizar_read(HttpServletRequest request,HttpServletResponse response, Connection con) throws SQLException{
+    protected void realizar_read(HttpServletRequest request,HttpServletResponse response, Connection con){
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	ArrayList<Ave> aves = new ArrayList();
@@ -78,15 +72,15 @@ public class Realizar extends HttpServlet {
 	    Conexion.CloseConnection(con);
 	    request.getRequestDispatcher("/JSP/read/leer.jsp").forward(request,response);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	} catch (ServletException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	} catch (IOException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	}
     }
     
-    protected void realizar_create(HttpServletRequest request,HttpServletResponse response, Connection con) throws SQLException{
+    protected void realizar_create(HttpServletRequest request,HttpServletResponse response, Connection con){
 	Ave ave = new Ave();
 	boolean errores = false;
 	try {
@@ -117,31 +111,35 @@ public class Realizar extends HttpServlet {
 		errores = true;
 	    }
 	} catch (IllegalAccessException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	} catch (InvocationTargetException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "warn");
 	} catch (ServletException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	} catch (IOException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	}
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
-	sql = con.prepareStatement("SELECT * FROM aves WHERE anilla = ?;");
-	sql.setString(1,request.getParameter("anilla"));
-	resultado = sql.executeQuery();
-	if(resultado.next()){
-	    request.setAttribute("error_repetida",request.getParameter("anilla"));
-		errores = true;
+	try {
+	    sql = con.prepareStatement("SELECT * FROM aves WHERE anilla = ?;");
+	    sql.setString(1,request.getParameter("anilla"));
+	    resultado = sql.executeQuery();
+	    if(resultado.next()){
+		request.setAttribute("error_repetida",request.getParameter("anilla"));
+		    errores = true;
+	    }
+	} catch (SQLException ex) {
+		MyLogger.doLog(ex,Conexion.class, "fatal");
 	}
 	if(errores){
 	    request.setAttribute("operacion","create");
 	    try {
 		request.getRequestDispatcher("Operacion").forward(request, response);
 	    } catch (ServletException ex) {
-		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+		MyLogger.doLog(ex,Conexion.class, "error");
 	    } catch (IOException ex) {
-		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+		MyLogger.doLog(ex,Conexion.class, "error");
 	    }
 	}else{
 	    try {
@@ -154,9 +152,11 @@ public class Realizar extends HttpServlet {
 		Conexion.CloseConnection(con);
 		request.getRequestDispatcher("/JSP/create/finCreate.jsp").forward(request,response);
 	    } catch (ServletException ex) {
-		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+		MyLogger.doLog(ex,Conexion.class, "error");
 	    } catch (IOException ex) {
-		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+		MyLogger.doLog(ex,Conexion.class, "error");
+	    } catch (SQLException ex) {
+		MyLogger.doLog(ex,Conexion.class, "fatal");
 	    }
 	}
     }
@@ -167,9 +167,9 @@ public class Realizar extends HttpServlet {
 	    try {
 		request.getRequestDispatcher("Operacion").forward(request,response);
 	    } catch (ServletException ex) {
-		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+		MyLogger.doLog(ex,Conexion.class, "error");
 	    } catch (IOException ex) {
-		Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+		MyLogger.doLog(ex,Conexion.class, "error");
 	    }
 	}
 	Ave ave = new Ave();
@@ -221,7 +221,7 @@ public class Realizar extends HttpServlet {
 	    }
 	    Conexion.CloseConnection(con);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Realizar.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	}
     }
     

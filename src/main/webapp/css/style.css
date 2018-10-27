@@ -9,18 +9,18 @@ body{
     margin:auto;
     min-height:100vh;
     background-color:#BBBDF6;
-    overflow:hidden;
 }
 
 .index-form{
-    width:60%;
-    margin:auto;
+    width: 100%;
+    margin: auto;
+    text-align: center;
 }
 
 .index-form .option{
     display:inline-block;
-    width:22vw;
-    height:22vw;
+    width:15vw;
+    height:15vw;
     box-sizing:border-box;
     padding:15px;
     text-align:center;
@@ -30,7 +30,7 @@ body{
     display:inline-block;
     width:90%;
     height:90%;
-    background:#22333B;
+    background:#72727E;
     border:0;
     color:transparent;
     border-radius:50%;

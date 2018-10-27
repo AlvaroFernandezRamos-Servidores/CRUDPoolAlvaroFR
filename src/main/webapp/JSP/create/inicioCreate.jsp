@@ -32,8 +32,8 @@
 		<label>Lugar</label><input type="text" name="lugar" <%if(request.getAttribute("error_lugar") == null && request.getParameter("lugar") != null){%>value="<%=request.getParameter("lugar")%>"<%}else if(request.getAttribute("error_lugar") != null){%>error<%}%>><br>
 		<label>Fecha</label><input type="text" name="fecha" placeholder="AAAA-DD-MM"<%if(request.getAttribute("error_fecha") == null && request.getParameter("fecha") != null){%>value="<%=request.getParameter("fecha")%>"<%}else if(request.getAttribute("error_fecha") != null){%>error<%}%>><br>
 		<input class="boton" type="submit" name="operacion" value="create">
+		<input class="sidebutton volver" type="submit" name="operacion" value="cancel">
 	    </form>
-	<a class="sidebutton volver" href="<%=request.getContextPath()%>/index.html">Volver</a>
 	</section>
     </body>
 </html>

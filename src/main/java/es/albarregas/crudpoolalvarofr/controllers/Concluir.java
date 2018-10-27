@@ -2,15 +2,13 @@ package es.albarregas.crudpoolalvarofr.controllers;
 
 import es.albarregas.crudpoolalvarofr.beans.Ave;
 import es.albarregas.crudpoolalvarofr.connections.Conexion;
+import es.albarregas.crudpoolalvarofr.utils.MyLogger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,12 +42,8 @@ public class Concluir extends HttpServlet {
 	try {
 	    ds = Conexion.conectar();
 	    con = ds.getConnection();
-	} catch (ClassNotFoundException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
-	} catch (NamingException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	}
 	if(request.getParameter("operacion") != null){
 	    switch(request.getParameter("operacion")){
@@ -67,11 +61,11 @@ public class Concluir extends HttpServlet {
 	    sql.executeUpdate();
 	    request.getRequestDispatcher("/JSP/delete/finDelete.jsp").forward(request,response);
 	} catch (SQLException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	} catch (ServletException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	} catch (IOException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	}
     }
     
@@ -148,15 +142,15 @@ public class Concluir extends HttpServlet {
 	    }
 	    request.getRequestDispatcher("/JSP/update/finUpdate.jsp").forward(request,response);
 	} catch (IllegalAccessException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	} catch (InvocationTargetException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "warn");
 	} catch (SQLException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	} catch (ServletException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	} catch (IOException ex) {
-	    Logger.getLogger(Concluir.class.getName()).log(Level.SEVERE, null, ex);
+	    MyLogger.doLog(ex,Conexion.class, "error");
 	}
     }
     
