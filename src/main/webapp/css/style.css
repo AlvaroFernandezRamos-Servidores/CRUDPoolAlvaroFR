@@ -54,6 +54,11 @@ body{
     background-image:url('../icons/delete.svg');
 }
 
+.index-form .option input+label{
+    font-size:1.5em;
+    margin-top:5px;
+}
+
 section{
     padding:20px;
     position:relative;

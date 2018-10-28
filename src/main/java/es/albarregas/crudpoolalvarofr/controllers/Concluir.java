@@ -62,9 +62,7 @@ public class Concluir extends HttpServlet {
 	    request.getRequestDispatcher("/JSP/delete/finDelete.jsp").forward(request,response);
 	} catch (SQLException ex) {
 	    MyLogger.doLog(ex,Conexion.class, "fatal");
-	} catch (ServletException ex) {
-	    MyLogger.doLog(ex,Conexion.class, "error");
-	} catch (IOException ex) {
+	} catch (ServletException | IOException ex) {
 	    MyLogger.doLog(ex,Conexion.class, "error");
 	}
     }
@@ -103,53 +101,64 @@ public class Concluir extends HttpServlet {
 	    }
 	    //si al menos uno de estos campos es distinto hacemos el update
 	    if(coincidencias[0].length() > 0 ||coincidencias[1].length() > 0 ||coincidencias[2].length() > 0){
-		//Vamosa construir la sentencia
-		String sentencia = "UPDATE aves SET ";
-		//Si hemos llegado hasta aqui sabes que, al menos, vamos a cambiar 1 campo
-		int campos = 1;
-		//con un bucle for recorremos las coincidencias para seguir construyendo la sentencia
-		for(int i=0;i<coincidencias.length;i++){
-		    if(coincidencias[i].length() > 0){
-			sentencia += nombresCampo[i] + "= ?,";
+		boolean errores = false;
+		if(nuevaAve.getEspecie().length()>20){
+		    request.setAttribute("error_especie",request.getParameter("especie"));
+		    errores = true;
+		}
+		if(nuevaAve.getLugar().length()>50){
+		    request.setAttribute("error_lugar",request.getParameter("lugar"));
+		    errores = true;
+		}
+		if(errores == true){
+		    System.out.println("AYUDA");
+		    Conexion.CloseConnection(con);
+		    request.getRequestDispatcher("/JSP/update/update.jsp").forward(request,response);
+		}else{
+		    //Vamosa construir la sentencia
+		    String sentencia = "UPDATE aves SET ";
+		    //Si hemos llegado hasta aqui sabes que, al menos, vamos a cambiar 1 campo
+		    int campos = 1;
+		    //con un bucle for recorremos las coincidencias para seguir construyendo la sentencia
+		    for(int i=0;i<coincidencias.length;i++){
+			if(coincidencias[i].length() > 0){
+			    sentencia += nombresCampo[i] + "= ?,";
+			}
 		    }
-		}
-		//quitamos la ultima coma
-		sentencia = sentencia.substring(0, sentencia.length() -1);
-		//y añadimos el final que es siempre el mismo
-		sentencia += " WHERE anilla = ?";
-		sql = con.prepareStatement(sentencia);
-		//ahora hay que reemplazar correctamente cada campo
-		if(coincidencias[0].length() > 0){
-		    sql.setString(campos,nuevaAve.getEspecie());
-		    campos++;
-		}
-		if(coincidencias[1].length() > 0){
-		    sql.setString(campos,nuevaAve.getLugar());
-		    campos++;
-		}
-		if(coincidencias[2].length() > 0){
-		    sql.setString(campos,nuevaAve.getFecha());
-		    campos++;
-		}
-		//la anilla siempre es necesaria
-		sql.setString(campos,nuevaAve.getAnilla());
-		//ejecutamos la sentencia
-		sql.executeUpdate();
+		    //quitamos la ultima coma
+		    sentencia = sentencia.substring(0, sentencia.length() -1);
+		    //y añadimos el final que es siempre el mismo
+		    sentencia += " WHERE anilla = ?";
+		    sql = con.prepareStatement(sentencia);
+		    //ahora hay que reemplazar correctamente cada campo
+		    if(coincidencias[0].length() > 0){
+			sql.setString(campos,nuevaAve.getEspecie());
+			campos++;
+		    }
+		    if(coincidencias[1].length() > 0){
+			sql.setString(campos,nuevaAve.getLugar());
+			campos++;
+		    }
+		    if(coincidencias[2].length() > 0){
+			sql.setString(campos,nuevaAve.getFecha());
+			campos++;
+		    }
+		    //la anilla siempre es necesaria
+		    sql.setString(campos,nuevaAve.getAnilla());
+		    //ejecutamos la sentencia
+		    sql.executeUpdate();
 
-		Conexion.CloseConnection(con);
+		    Conexion.CloseConnection(con);
+		}
 	    }else{
 		request.setAttribute("error_sin_cambios", "nothingChanged");
 	    }
 	    request.getRequestDispatcher("/JSP/update/finUpdate.jsp").forward(request,response);
-	} catch (IllegalAccessException ex) {
+	} catch (IllegalAccessException | SQLException ex) {
 	    MyLogger.doLog(ex,Conexion.class, "fatal");
 	} catch (InvocationTargetException ex) {
 	    MyLogger.doLog(ex,Conexion.class, "warn");
-	} catch (SQLException ex) {
-	    MyLogger.doLog(ex,Conexion.class, "fatal");
-	} catch (ServletException ex) {
-	    MyLogger.doLog(ex,Conexion.class, "error");
-	} catch (IOException ex) {
+	} catch (ServletException | IOException ex) {
 	    MyLogger.doLog(ex,Conexion.class, "error");
 	}
     }

@@ -8,6 +8,12 @@
     Ave ave = null;
     if(request.getAttribute("ave") != null){
 	ave = (Ave) request.getAttribute("ave");
+    }else if(request.getAttribute("update_ave") != null){
+	ave = (Ave) request.getAttribute("update_ave");
+    }
+    Ave nuevaAve = null;
+    if(request.getAttribute("nuevaAve") != null){
+	nuevaAve = (Ave) request.getAttribute("nuevaAve");
     }
 %>
 <!DOCTYPE html>

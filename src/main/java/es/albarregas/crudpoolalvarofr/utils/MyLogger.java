@@ -1,7 +1,10 @@
 package es.albarregas.crudpoolalvarofr.utils;
 
+import org.apache.log4j.BasicConfigurator;
+
 public class MyLogger {
     public static void doLog(Exception excepcion, Class clase, String nivel){
+	BasicConfigurator.configure();
 	System.setProperty("logPath", clase.getSimpleName());
 	System.setProperty("projectName", "CRUDPoolAlvaroFR");
 	org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(clase);
