@@ -41,6 +41,9 @@ public class Realizar extends HttpServlet {
 	    ds = Conexion.conectar();
 	    con = ds.getConnection();
 	    if(request.getParameter("operacion")!=null){
+		//En este controller se realizan las funciones principales de create y read
+		//update y delete cotejan datos en éste punto
+		//dependiendo de la operación que se reciba se hace una cosa u otra
 		switch(request.getParameter("operacion")){
 		    case "create":realizar_create(request,response,con);break;
 		    case "read":realizar_read(request,response,con);break;
@@ -54,6 +57,8 @@ public class Realizar extends HttpServlet {
 	}
     }
     protected void realizar_read(HttpServletRequest request,HttpServletResponse response, Connection con){
+	//Este método recupera las aves de la BD y las inserta como atributo
+	//luego redirige a la página de muestra
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	ArrayList<Ave> aves = new ArrayList();
@@ -81,6 +86,7 @@ public class Realizar extends HttpServlet {
     }
     
     protected void realizar_create(HttpServletRequest request,HttpServletResponse response, Connection con){
+	//Método para insertar ave en BD
 	Ave ave = new Ave();
 	boolean errores = false;
 	try {
@@ -122,9 +128,12 @@ public class Realizar extends HttpServlet {
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	try {
+	    //Formamos la sentencia de comprobación
 	    sql = con.prepareStatement("SELECT * FROM aves WHERE anilla = ?;");
 	    sql.setString(1,request.getParameter("anilla"));
+	    //Ejecutamos la lectura
 	    resultado = sql.executeQuery();
+	    //Si existen ocurrencias es que ya existe un elemento con ese anilla
 	    if(resultado.next()){
 		request.setAttribute("error_repetida",request.getParameter("anilla"));
 		    errores = true;
@@ -133,6 +142,8 @@ public class Realizar extends HttpServlet {
 		MyLogger.doLog(ex,Conexion.class, "fatal");
 	}
 	if(errores){
+	    //Si hay errores reconducimos al formulario
+	    //Los errores establecidos previamente pasarán como atributos
 	    request.setAttribute("operacion","create");
 	    try {
 		request.getRequestDispatcher("Operacion").forward(request, response);
@@ -142,14 +153,18 @@ public class Realizar extends HttpServlet {
 		MyLogger.doLog(ex,Conexion.class, "error");
 	    }
 	}else{
+	    //Si no hay errores procedemos a la inserción
 	    try {
 		sql = con.prepareStatement("INSERT INTO aves VALUES (?,?,?,?)");
 		sql.setString(1,ave.getAnilla());
 		sql.setString(2,ave.getEspecie());
 		sql.setString(3,ave.getLugar());
 		sql.setString(4,ave.getFecha());
+		//Ejecutamos la inserción
 		sql.executeUpdate();
+		//Cerramos el hilo
 		Conexion.CloseConnection(con);
+		//Redirigimos a la pagina de confirmación
 		request.getRequestDispatcher("/JSP/create/finCreate.jsp").forward(request,response);
 	    } catch (ServletException ex) {
 		MyLogger.doLog(ex,Conexion.class, "error");
@@ -162,6 +177,7 @@ public class Realizar extends HttpServlet {
     }
     
     protected void fetch_elements(HttpServletRequest request,HttpServletResponse response, Connection con){
+	//Método para hacer comprobaciones en las selecciones entre multiples ocurrencias
 	//Comprobamos que venga al menos una selección en los parámetros
 	if(request.getParameterValues("aves_update") == null || request.getParameterValues("aves_update").length<1){
 	    try {
@@ -176,23 +192,31 @@ public class Realizar extends HttpServlet {
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	try {
+	    //Si la operación es delete
 	    if(request.getParameter("operacion").equals("delete")){
+		//Construimos la sentencia iterando sobre los elementos seleccionados
 		String sentencia = "SELECT * FROM aves WHERE ";
 		for(int i = 0; i < request.getParameterValues("aves_update").length;i++){//aves_delete ??
 		    sentencia += " anilla = ? OR";
 		}
+		//Arreglamos el string
 		sentencia = sentencia.substring(0, sentencia.length() - 3);
+		//Y añadimos punto y coma porque las cosas hay que hacerlas bien
 		sentencia+=";";
 		sql = con.prepareStatement(sentencia);
+		//Ahora iteramos nuevamente sobre los resultados para sustituir las ? en el preparedStatement
 		for(int i = 0; i < request.getParameterValues("aves_update").length;i++){
 		    sql.setString(i+1,request.getParameterValues("aves_update")[i]);
 		}
 	    }else{
+		//si es update
 		sql = con.prepareStatement("SELECT * FROM aves WHERE anilla = ?;");
 		sql.setString(1,request.getParameterValues("aves_update")[0]);
 	    }
+	    //Ejecutamos sentencia, operacion ambivalente en este caso
 	    resultado = sql.executeQuery();
 	    if(request.getParameter("operacion").equals("delete")){
+		//Si es delete
 		//Vamos a emplear la query del select y a transformarla para
 		//ahorrarnos todo el rollo de generarla.
 		String sql_para_delete = sql.toString().split(":")[1];
@@ -201,6 +225,7 @@ public class Realizar extends HttpServlet {
 		request.setAttribute("delete_query",sql_para_delete);
 		
 		ArrayList<Ave> aves = new ArrayList();
+		//formamos un arrayList con las aves que se van a eliminar
 		while(resultado.next()){
 		    ave = new Ave();
 		    ave.setAnilla(resultado.getString("anilla"));
@@ -209,6 +234,7 @@ public class Realizar extends HttpServlet {
 		    ave.setFecha(resultado.getString("fecha"));
 		    aves.add(ave);
 		}
+		//Y las pasamos como atributo para la pagina de confirmación
 		request.setAttribute("aves_delete",aves);
 	    }else{
 		if(resultado.next()){

@@ -35,6 +35,8 @@ public class Operacion extends HttpServlet {
 	processRequest(request, response);
 	String direccion = "JSP/";
 	if(request.getParameter("operacion") != null){
+	    //Dependiendo del parámetro que recibamos redirigimos a un sitio u otro
+	    //Update y delete necesitan recoger aves de la BD antes de redirigir
 	    switch(request.getParameter("operacion")){
 		case "create":direccion += "create/inicioCreate.jsp";break;
 		case "read":direccion = "Realizar";break;
@@ -47,6 +49,7 @@ public class Operacion extends HttpServlet {
     }
     
     public void operacion_get_aves(HttpServletRequest request,HttpServletResponse response){
+	//Este método recupera las aves de la BD y las inserta como atributo
 	PreparedStatement sql = null;
 	ResultSet resultado = null;
 	ArrayList<Ave> aves = new ArrayList();

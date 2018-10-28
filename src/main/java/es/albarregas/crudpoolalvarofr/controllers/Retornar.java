@@ -12,6 +12,7 @@ public class Retornar extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	//Pase lo que pase, si hemos llegado hasta aqui, volvemos al index
 	response.sendRedirect("index.html");
     }
 
